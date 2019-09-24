@@ -11,6 +11,7 @@ import unsl.services.UserService;
 @RestController
 public class UserController {
 
+    
     @Autowired
     UserService userService;
 
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/users/{userId}")
-    
+
     @ResponseBody
     public Object getUser(@PathVariable("userId") Long userId) {
         User user = userService.getUser(userId);
