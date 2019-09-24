@@ -10,6 +10,7 @@ import unsl.services.UserService;
 
 @RestController
 public class UserController {
+    
     @Autowired
     UserService userService;
 
