@@ -1,12 +1,17 @@
 package unsl.controllers;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import unsl.entities.Account;
 import unsl.entities.ResponseError;
 import unsl.entities.User;
+import unsl.entities.UserAccounts;
 import unsl.services.UserService;
+import unsl.utils.RestService;
 
 @RestController
 public class UserController {
@@ -14,6 +19,9 @@ public class UserController {
     
     @Autowired
     UserService userService;
+    
+    @Autowired
+    RestService  restService;
 
     @GetMapping(value = "/users")
     @ResponseBody
@@ -54,7 +62,7 @@ public class UserController {
     @ResponseBody
     public Object updateUser(@RequestBody User User) {
         User res = userService.updateUser(User);
-        if ( res == null) {
+        if (res == null) {
             return new ResponseEntity(new ResponseError(404, String.format("User with ID %d not found", User.getId())), HttpStatus.NOT_FOUND);
         }
         return res;
@@ -62,11 +70,20 @@ public class UserController {
 
     @DeleteMapping(value = "/users/{id}")
     @ResponseBody
-    public Object deleteUser(@PathVariable Long id) {
+    public Object deleteUser(@PathVariable("id") Long id) throws Exception {
         User res = userService.deleteUser(id);
-        if ( res == null) {
-            return new ResponseEntity(new ResponseError(404, String.format("User with ID %d not found", id)), HttpStatus.NOT_FOUND);
+        if(res == null){
+            return new ResponseEntity(new ResponseError(404,String.format("User with ID %d not found", id)), HttpStatus.NOT_FOUND);
         }
+
+         UserAccounts allAccounts = restService.getAccounts(String.format("http://localhost:8889/accounts/search?holder=",res.getId()));
+         /** hacer un patch a http://localhost:8889/accounts/{id} del status de cada cuenta a baja */
+         
+         for(Account deletedAccount: allAccounts.getUserAccounts()){
+             
+            restService.updateAccountStatus(String.format("http://localhost:8889/accounts/%d",deletedAccount.getId()), deletedAccount);
+
+         }
         return new ResponseEntity(null,HttpStatus.NO_CONTENT);
     }
 
