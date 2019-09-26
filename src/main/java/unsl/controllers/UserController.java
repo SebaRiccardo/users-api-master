@@ -76,7 +76,7 @@ public class UserController {
             return new ResponseEntity(new ResponseError(404,String.format("User with ID %d not found", id)), HttpStatus.NOT_FOUND);
         }
 
-         UserAccounts allAccounts = restService.getAccounts(String.format("http://localhost:8889/accounts/search?holder=",res.getId()));
+         UserAccounts allAccounts = restService.getAccounts(String.format("http://localhost:8889/accounts/search?holder=%d",res.getId()));
          /** hacer un patch a http://localhost:8889/accounts/{id} del status de cada cuenta a baja */
          
          for(Account deletedAccount: allAccounts.getUserAccounts()){
