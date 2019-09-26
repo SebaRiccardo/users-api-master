@@ -27,12 +27,22 @@ public class RestService {
         }
         return accounts;
     }
+     /** 
+     * @param url
+     * @return
+     * @throws Exception
+     */
 
-    public Account updateAccountStatus(String url,Account updatedAccount){
+    public Account updateAccountStatus(String url,Account updatedAccount) throws Exception{
              
         RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.patchForObject(url,updatedAccount,Account.class);
-     
+        Account account;
+        try {
+         account = restTemplate.postForObject(url,updatedAccount,Account.class);
+        }  catch (Exception e){
+        throw new Exception( buildMessageError(e));
+       }
+        return account;
     }
    
     private String buildMessageError(Exception e) {
