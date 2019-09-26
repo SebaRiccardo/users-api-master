@@ -83,7 +83,6 @@ public class UserController {
                                                                 /* aca le paso por url el ?_method=patch porque despues uso postForObject para
                                                                 evitar el error del patchforobject*/
             restService.updateAccountStatus(String.format("http://localhost:8889/accounts/%d?_method=patch",deletedAccount.getId()), deletedAccount);
-
          }
         return new ResponseEntity(null,HttpStatus.NO_CONTENT);
     }

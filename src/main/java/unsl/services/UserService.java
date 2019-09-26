@@ -3,6 +3,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import unsl.entities.User;
+import unsl.entities.User.Status;
 import unsl.repository.UserRepository;
 
 @Service
@@ -23,6 +24,8 @@ public class UserService {
     }
 
     public User saveUser(User user) {
+        user.setStatus(User.Status.ACTIVO);
+       
         return userRepository.save(user);
     }
 
