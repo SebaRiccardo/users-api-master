@@ -25,7 +25,7 @@ public class UserService {
 
     public User saveUser(User user) {
         user.setStatus(User.Status.ACTIVO);
-       
+        
         return userRepository.save(user);
     }
 
