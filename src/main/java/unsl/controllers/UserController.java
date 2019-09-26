@@ -80,8 +80,9 @@ public class UserController {
          /** hacer un patch a http://localhost:8889/accounts/{id} del status de cada cuenta a baja */
          
          for(Account deletedAccount: allAccounts.getUserAccounts()){
-             
-            restService.updateAccountStatus(String.format("http://localhost:8889/accounts/%d",deletedAccount.getId()), deletedAccount);
+                                                                /* aca le paso por url el ?_method=patch porque despues uso postForObject para
+                                                                evitar el error del patchforobject*/
+            restService.updateAccountStatus(String.format("http://localhost:8889/accounts/%d?_method=patch",deletedAccount.getId()), deletedAccount);
 
          }
         return new ResponseEntity(null,HttpStatus.NO_CONTENT);
