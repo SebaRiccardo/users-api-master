@@ -19,7 +19,7 @@ public class RestService {
      */
     public UserAccounts getAccounts(String url) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
-        UserAccounts accounts;
+        UserAccounts accounts; 
         try {
             accounts = restTemplate.getForObject(url,UserAccounts.class);
         }  catch (Exception e){
@@ -32,7 +32,6 @@ public class RestService {
      * @return
      * @throws Exception
      */
-
     public Account updateAccountStatus(String url,Account updatedAccount) throws Exception{
              
         RestTemplate restTemplate = new RestTemplate();
