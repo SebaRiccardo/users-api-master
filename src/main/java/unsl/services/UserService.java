@@ -28,16 +28,27 @@ public class UserService {
         
         return userRepository.save(user);
     }
-
+     
     public User updateUser(User updatedUser){
         User user = userRepository.findById(updatedUser.getId()).orElse(null);;
         if (user ==  null){
             return null;
         }
-        user.setFirstName(updatedUser.getFirstName());
-        user.setLastName(updatedUser.getLastName());
-        return userRepository.save(user);
-        
+        if(updatedUser.getFirstName()==null && updatedUser.getLastName()==null ){
+           return userRepository.save(user);
+        }else{
+           if(updatedUser.getFirstName()!= null && updatedUser.getLastName() !=null ){
+                user.setFirstName(updatedUser.getFirstName());
+                user.setLastName(updatedUser.getLastName());
+           }else{
+               if(updatedUser.getLastName()!= null){
+                 user.setLastName(updatedUser.getLastName());
+               }else{
+                 user.setFirstName(updatedUser.getFirstName());
+               }
+           }   
+        }
+        return userRepository.save(user);   
     }
 
     public User deleteUser(Long userId) {

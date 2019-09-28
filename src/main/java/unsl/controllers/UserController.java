@@ -58,12 +58,13 @@ public class UserController {
         return userService.saveUser(User);
     }
 
-    @PutMapping(value = "/users")
+    @PutMapping(value = "/users/{id}")
     @ResponseBody
-    public Object updateUser(@RequestBody User User) {
-        User res = userService.updateUser(User);
+    public Object updateUser(@PathVariable("id") long id_user, @RequestBody User user) {
+        user.setId(id_user);
+        User res = userService.updateUser(user);
         if (res == null) {
-            return new ResponseEntity(new ResponseError(404, String.format("User with ID %d not found", User.getId())), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new ResponseError(404, String.format("User with ID %d not found", id_user)), HttpStatus.NOT_FOUND);
         }
         return res;
     }
