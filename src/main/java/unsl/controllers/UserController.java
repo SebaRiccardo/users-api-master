@@ -58,9 +58,9 @@ public class UserController {
         return userService.saveUser(User);
     }
 
-    @PutMapping(value = "/users/{id}")
+    @PutMapping(value = "/users/{userId}")
     @ResponseBody
-    public Object updateUser(@PathVariable("id") long id_user, @RequestBody User user) {
+    public Object updateUser(@PathVariable("userId") long id_user, @RequestBody User user) {
         user.setId(id_user);
         User res = userService.updateUser(user);
         if (res == null) {
@@ -69,9 +69,9 @@ public class UserController {
         return res;
     }
 
-    @DeleteMapping(value = "/users/{id}")
+    @DeleteMapping(value = "/users/{userId}")
     @ResponseBody
-    public Object deleteUser(@PathVariable("id") Long id) throws Exception {
+    public Object deleteUser(@PathVariable("userId") Long id) throws Exception {
         User res = userService.deleteUser(id);
         if(res == null){
             return new ResponseEntity(new ResponseError(404,String.format("User with ID %d not found", id)), HttpStatus.NOT_FOUND);
