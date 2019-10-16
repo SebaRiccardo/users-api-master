@@ -1,4 +1,5 @@
 package unsl.entities;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 
@@ -18,9 +19,11 @@ public class User {
 	private long dni;
 
 	@JsonProperty("first_name")
+	@JsonAlias({"name","firstname"})
 	private String firstName;
-
+	
 	@JsonProperty("last_name")
+	@JsonAlias({"surname","second_name"})
 	private String lastName;
 
 	@Enumerated(EnumType.STRING)
