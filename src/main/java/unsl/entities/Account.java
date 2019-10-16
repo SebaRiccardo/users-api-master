@@ -6,9 +6,6 @@ import java.math.BigDecimal;
 
 import javax.persistence.*;
 
-
-@Entity 
-
   public class Account {
 
         public Account(){
