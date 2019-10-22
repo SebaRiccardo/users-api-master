@@ -1,10 +1,20 @@
 package unsl.controllers;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import unsl.entities.Account;
 import unsl.entities.ResponseError;
@@ -77,13 +87,13 @@ public class UserController {
             return new ResponseEntity(new ResponseError(404,String.format("User with ID %d not found", id)), HttpStatus.NOT_FOUND);
         }
 
-         UserAccounts allAccounts = restService.getAccounts(String.format("http://localhost:8889/accounts/search?holder=%d",res.getId()));
+         UserAccounts allAccounts = restService.getAccounts(String.format("http://3.85.25.114:8889/accounts/search?holder=%d",res.getId()));
          /** hacer un patch a http://localhost:8889/accounts/{id} del status de cada cuenta a baja */
          
          for(Account deletedAccount: allAccounts.getUserAccounts()){
                                                                 /* aca le paso por url el ?_method=patch porque despues uso postForObject para
                                                                 evitar el error del patchforobject*/
-            restService.updateAccountStatus(String.format("http://localhost:8889/accounts/%d?_method=patch",deletedAccount.getId()), deletedAccount);
+            restService.updateAccountStatus(String.format("http://3.85.25.114:8889/accounts/%d?_method=patch",deletedAccount.getId()), deletedAccount);
          }
         return new ResponseEntity(null,HttpStatus.NO_CONTENT);
     }
