@@ -41,12 +41,11 @@ public class UserController {
     }
 
     @GetMapping(value = "/users/{userId}")
-
     @ResponseBody
     public Object getUser(@PathVariable("userId") Long userId) {
         User user = userService.getUser(userId);
         if ( user == null) {
-            return new ResponseEntity(new ResponseError(404, String.format("User %d not found", userId)), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new ResponseError(404, String.format("Holder with id: %d not found", userId)), HttpStatus.NOT_FOUND);
         }
         return user;
     }
@@ -56,7 +55,7 @@ public class UserController {
     public Object searchUser(@RequestParam("dni") Long dni) {
         User user = userService.findByDni(dni);
         if ( user == null) {
-            return new ResponseEntity(new ResponseError(404, String.format("User with dni %d not found", dni)), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new ResponseError(404, String.format("Holder with dni: %d not found", dni)), HttpStatus.NOT_FOUND);
         }
         return user;
     }
@@ -74,7 +73,7 @@ public class UserController {
         user.setId(id_user);
         User res = userService.updateUser(user);
         if (res == null) {
-            return new ResponseEntity(new ResponseError(404, String.format("User with ID %d not found", id_user)), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new ResponseError(404, String.format("Holder with id: %d not found", id_user)), HttpStatus.NOT_FOUND);
         }
         return res;
     }
@@ -84,7 +83,7 @@ public class UserController {
     public Object deleteUser(@PathVariable("userId") Long id) throws Exception {
         User res = userService.deleteUser(id);
         if(res == null){
-            return new ResponseEntity(new ResponseError(404,String.format("User with ID %d not found", id)), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new ResponseError(404,String.format("Holder with id: %d not found", id)), HttpStatus.NOT_FOUND);
         }
 
          UserAccounts allAccounts = restService.getAccounts(String.format("http://3.85.25.114:8889/accounts/search?holder=%d",res.getId()));
@@ -93,6 +92,8 @@ public class UserController {
          for(Account deletedAccount: allAccounts.getUserAccounts()){
                                                                 /* aca le paso por url el ?_method=patch porque despues uso postForObject para
                                                                 evitar el error del patchforobject*/
+            deletedAccount.setStatus(Account.Status.BAJA);
+            /// dbeeria controlar que el monto de cada cuenta sea cero pero por ahora voy a dejar que las de de BAJA con monto positivo
             restService.updateAccountStatus(String.format("http://3.85.25.114:8889/accounts/%d?_method=patch",deletedAccount.getId()), deletedAccount);
          }
         return new ResponseEntity(null,HttpStatus.NO_CONTENT);
