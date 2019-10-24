@@ -24,33 +24,9 @@ public class UserService {
     }
 
     public User saveUser(User user) {
-        user.setStatus(User.Status.ACTIVO);
-        
         return userRepository.save(user);
     }
      
-    public User updateUser(User updatedUser){
-        User user = userRepository.findById(updatedUser.getId()).orElse(null);;
-        if (user ==  null){
-            return null;
-        }
-        if(updatedUser.getFirstName()==null && updatedUser.getLastName()==null ){
-           return userRepository.save(user);
-        }else{
-           if(updatedUser.getFirstName()!= null && updatedUser.getLastName() !=null ){
-                user.setFirstName(updatedUser.getFirstName());
-                user.setLastName(updatedUser.getLastName());
-           }else{
-               if(updatedUser.getLastName()!= null){
-                 user.setLastName(updatedUser.getLastName());
-               }else{
-                 user.setFirstName(updatedUser.getFirstName());
-               }
-           }   
-        }
-        return userRepository.save(user);   
-    }
-
     public User deleteUser(Long userId) {
         User user = userRepository.findById(userId).orElse(null);;
         if (user ==  null){

@@ -63,19 +63,42 @@ public class UserController {
     @PostMapping(value = "/users")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Object createUser(@RequestBody User User) {
-        return userService.saveUser(User);
+    public Object createUser(@RequestBody User user) {
+       
+       if(user.getFirstName()!=null && user.getLastName()!=null && user.getDni() != null ){
+          user.setStatus(User.Status.ACTIVO);
+           return userService.saveUser(user);
+        }else{
+           return new ResponseEntity(new ResponseError(400, String.format("Holder data is missing ")), HttpStatus.BAD_REQUEST);    
+        }   
     }
 
     @PutMapping(value = "/users/{userId}")
     @ResponseBody
     public Object updateUser(@PathVariable("userId") long id_user, @RequestBody User user) {
-        user.setId(id_user);
-        User res = userService.updateUser(user);
-        if (res == null) {
+        
+        User currentUser = userService.getUser(id_user);
+       
+        if (currentUser == null) {
             return new ResponseEntity(new ResponseError(404, String.format("Holder with id: %d not found", id_user)), HttpStatus.NOT_FOUND);
         }
-        return res;
+        //controla si los datos no son null
+        if(user.getFirstName()==null && user.getLastName()==null ){
+           return currentUser;
+        }else{
+           if(user.getFirstName()!= null && user.getLastName() !=null ){
+                currentUser.setFirstName(user.getFirstName());
+                currentUser.setLastName(user.getLastName());
+           }else{
+               // solo actualiza el dato q no es null
+               if(user.getLastName()!= null){
+                 currentUser.setLastName(user.getLastName());
+               }else{
+                 currentUser.setFirstName(user.getFirstName());
+               }
+           }   
+        }
+        return userService.saveUser(currentUser);
     }
 
     @DeleteMapping(value = "/users/{userId}")
