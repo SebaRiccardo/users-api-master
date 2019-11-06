@@ -13,7 +13,8 @@ import unsl.config.CacheConfig;
 public class UserService {
     @Autowired
     UserRepository userRepository;
-
+    
+    @Cacheable(CacheConfig.user_CACHE)
     public List<User> getAll() {
         return userRepository.findAll();
     }

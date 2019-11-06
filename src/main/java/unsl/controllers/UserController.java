@@ -47,6 +47,10 @@ public class UserController {
         if ( user == null) {
             return new ResponseEntity(new ResponseError(404, String.format("Holder with id: %d not found", userId)), HttpStatus.NOT_FOUND);
         }
+        
+
+
+
         return user;
     }
 
