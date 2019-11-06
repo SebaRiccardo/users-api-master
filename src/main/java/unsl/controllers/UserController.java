@@ -25,7 +25,7 @@ import unsl.utils.RestService;
 
 @RestController
 public class UserController {
-
+    private static String ipCuentas="localhost";
     
     @Autowired
     UserService userService;
@@ -113,15 +113,15 @@ public class UserController {
             return new ResponseEntity(new ResponseError(404,String.format("Holder with id: %d not found", id)), HttpStatus.NOT_FOUND);
         }
 
-         UserAccounts allAccounts = restService.getAccounts(String.format("http://54.210.50.176:8889/accounts/search?holder=%d",res.getId()));
+         UserAccounts allAccounts = restService.getAccounts(String.format("http://"+ipCuentas+":8889/accounts/search?holder=%d",res.getId()));
          /** hacer un patch a http://localhost:8889/accounts/{id} del status de cada cuenta a baja */
          
          for(Account deletedAccount: allAccounts.getUserAccounts()){
                                                                 /* aca le paso por url el ?_method=patch porque despues uso postForObject para
                                                                 evitar el error del patchforobject*/
             deletedAccount.setStatus(Account.Status.BAJA);
-            /// dbeeria controlar que el monto de cada cuenta sea cero pero por ahora voy a dejar que las de de BAJA con monto positivo
-            restService.updateAccountStatus(String.format("http://54.210.50.176:8889/accounts/%d?_method=patch",deletedAccount.getId()), deletedAccount);
+            /// deberia controlar que el monto de cada cuenta sea cero pero por ahora voy a dejar que las de de BAJA con monto positivo
+            restService.updateAccountStatus(String.format("http://"+ipCuentas+":8889/accounts/%d?_method=patch",deletedAccount.getId()), deletedAccount);
          }
         return new ResponseEntity(null,HttpStatus.NO_CONTENT);
     }
