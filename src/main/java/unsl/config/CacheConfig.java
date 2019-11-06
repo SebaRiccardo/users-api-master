@@ -22,7 +22,10 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
+       
+       
         simpleCacheManager.setCaches(Arrays.asList(buildUsersCache()));
+       
         return simpleCacheManager;
     }
 
@@ -31,7 +34,8 @@ public class CacheConfig {
         return new GuavaCache(user_CACHE, CacheBuilder
                 .newBuilder()
                 .maximumSize(usersMaxSize)
-                .expireAfterAccess(1, TimeUnit.DAYS)
+                .expireAfterAccess(23, TimeUnit.HOURS)
+                .expireAfterWrite(167,TimeUnit.HOURS) // 167 horas es un poco menos de una semana
                 .build(),
                 true);
     }
