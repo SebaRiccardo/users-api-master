@@ -13,7 +13,7 @@ import unsl.config.CacheConfig;
 public class UserService {
     @Autowired
     UserRepository userRepository;
-    
+
     @Cacheable(CacheConfig.user_CACHE)
     public List<User> getAll() {
         return userRepository.findAll();
@@ -30,7 +30,7 @@ public class UserService {
     public User saveUser(User user) {
         return userRepository.save(user);
     }
-     
+    
     public User deleteUser(Long userId) {
         User user = userRepository.findById(userId).orElse(null);;
         if (user ==  null){

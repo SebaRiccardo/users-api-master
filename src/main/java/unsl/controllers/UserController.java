@@ -1,5 +1,6 @@
 package unsl.controllers;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,21 @@ import unsl.utils.RestService;
 @RestController
 public class UserController {
     private static String ipCuentas="localhost";
-    
+    private static String port =":8889";
     @Autowired
     UserService userService;
     
     @Autowired
     RestService  restService;
+
+
+    @GetMapping(value = "/ping")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public String ping() {
+       
+        return "pong";
+    }
 
     @GetMapping(value = "/users")
     @ResponseBody
@@ -47,9 +57,6 @@ public class UserController {
         if ( user == null) {
             return new ResponseEntity(new ResponseError(404, String.format("Holder with id: %d not found", userId)), HttpStatus.NOT_FOUND);
         }
-        
-
-
 
         return user;
     }
@@ -69,7 +76,7 @@ public class UserController {
     @ResponseBody
     public Object createUser(@RequestBody User user) {
        
-       if(user.getFirstName()!=null && user.getLastName()!=null && user.getDni() != null ){
+       if(user.getFirstName()!=null && user.getLastName()!=null && user.getDni() != 0 ){
           user.setStatus(User.Status.ACTIVO);
            return userService.saveUser(user);
         }else{
@@ -112,19 +119,18 @@ public class UserController {
         if(res == null){
             return new ResponseEntity(new ResponseError(404,String.format("Holder with id: %d not found", id)), HttpStatus.NOT_FOUND);
         }
-
-         UserAccounts allAccounts = restService.getAccounts(String.format("http://"+ipCuentas+":8889/accounts/search?holder=%d",res.getId()));
-         /** hacer un patch a http://localhost:8889/accounts/{id} del status de cada cuenta a baja */
-         
+         UserAccounts allAccounts = restService.getAccounts(String.format("http://"+ipCuentas+port+"/accounts/search?holder=%d",res.getId()));
          for(Account deletedAccount: allAccounts.getUserAccounts()){
-                                                                /* aca le paso por url el ?_method=patch porque despues uso postForObject para
-                                                                evitar el error del patchforobject*/
+            if(deletedAccount.getAccount_balance().compareTo(new BigDecimal(0))>0){
+                return new ResponseEntity(new ResponseError(400, String
+                .format("The account with id: %d MUST be 0 (zero) before you delete the user account",deletedAccount.getId())), HttpStatus.BAD_REQUEST);
+            }
+            /* aca le paso por url el ?_method=patch porque despues uso postForObject para evitar el error del patchforobject*/
             deletedAccount.setStatus(Account.Status.BAJA);
-            /// deberia controlar que el monto de cada cuenta sea cero pero por ahora voy a dejar que las de de BAJA con monto positivo
-            restService.updateAccountStatus(String.format("http://"+ipCuentas+":8889/accounts/%d?_method=patch",deletedAccount.getId()), deletedAccount);
-         }
-        return new ResponseEntity(null,HttpStatus.NO_CONTENT);
-    }
 
+            restService.updateAccountStatus(String.format("http://"+ipCuentas+port+"/accounts/%d?_method=patch",deletedAccount.getId()), deletedAccount);
+         }
+        return new ResponseEntity(204,HttpStatus.NO_CONTENT);
+    }
 }
 
