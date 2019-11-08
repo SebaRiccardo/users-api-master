@@ -73,7 +73,7 @@ public class UserController {
     @ResponseBody
     public Object createUser(@RequestBody User user) {
        
-       if(user.getFirstName()!=null && user.getLastName()!=null && user.getDni() != 0 ){
+       if(user.getFirstName()!=null && user.getLastName()!=null && user.getDni() != null ){
           user.setStatus(User.Status.ACTIVO);
            return userService.saveUser(user);
         }else{
@@ -118,14 +118,13 @@ public class UserController {
         }
          UserAccounts allAccounts = restService.getAccounts(String.format("http://"+ipCuentas+port+"/accounts/search?holder=%d",res.getId()));
          for(Account deletedAccount: allAccounts.getUserAccounts()){
-            
-            /* aca le paso por url el ?_method=patch porque despues uso postForObject para evitar el error del patchforobject*/
+           
             deletedAccount.setStatus(Account.Status.BAJA);
 
             restService.updateAccountStatus(String.format("http://"+ipCuentas+port+"/accounts/%d?_method=patch",deletedAccount.getId()), deletedAccount);
          }
         return new ResponseEntity(204,HttpStatus.NO_CONTENT);
     }
-
+    
 }
 
