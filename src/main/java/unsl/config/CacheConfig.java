@@ -33,6 +33,7 @@ public class CacheConfig {
     private GuavaCache buildUsersCache() {
         return new GuavaCache(user_CACHE, CacheBuilder
                 .newBuilder()
+                
                 .maximumSize(usersMaxSize)
                 .build(),
                 true);
