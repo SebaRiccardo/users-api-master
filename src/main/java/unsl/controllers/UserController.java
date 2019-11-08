@@ -34,12 +34,10 @@ public class UserController {
     @Autowired
     RestService  restService;
 
-
     @GetMapping(value = "/ping")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public String ping() {
-       
         return "pong";
     }
 
@@ -57,7 +55,6 @@ public class UserController {
         if ( user == null) {
             return new ResponseEntity(new ResponseError(404, String.format("Holder with id: %d not found", userId)), HttpStatus.NOT_FOUND);
         }
-
         return user;
     }
 
@@ -121,10 +118,7 @@ public class UserController {
         }
          UserAccounts allAccounts = restService.getAccounts(String.format("http://"+ipCuentas+port+"/accounts/search?holder=%d",res.getId()));
          for(Account deletedAccount: allAccounts.getUserAccounts()){
-            if(deletedAccount.getAccount_balance().compareTo(new BigDecimal(0))>0){
-                return new ResponseEntity(new ResponseError(400, String
-                .format("The account with id: %d MUST be 0 (zero) before you delete the user account",deletedAccount.getId())), HttpStatus.BAD_REQUEST);
-            }
+            
             /* aca le paso por url el ?_method=patch porque despues uso postForObject para evitar el error del patchforobject*/
             deletedAccount.setStatus(Account.Status.BAJA);
 
@@ -132,5 +126,6 @@ public class UserController {
          }
         return new ResponseEntity(204,HttpStatus.NO_CONTENT);
     }
+
 }
 

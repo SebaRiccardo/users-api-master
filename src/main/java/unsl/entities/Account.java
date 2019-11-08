@@ -10,7 +10,6 @@ import javax.persistence.*;
 
         public Account(){
 
-
         }
         public static enum Currency {
             PESO_AR,
