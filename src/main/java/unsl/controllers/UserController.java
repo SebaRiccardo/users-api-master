@@ -53,11 +53,12 @@ public class UserController {
     public Object getUser(@PathVariable("userId") Long userId) {
         User user = userService.getUser(userId);
         if ( user == null) {
-            return new ResponseEntity(new ResponseError(404, String.format("Holder with id: %d not found", userId)), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new ResponseError(400, String.format("Holder with id: %d not found", userId)), HttpStatus.NOT_FOUND);
         }
         return user;
     }
 
+    
     @GetMapping(value = "/users/search")
     @ResponseBody
     public Object searchUser(@RequestParam("dni") Long dni) {
@@ -72,7 +73,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Object createUser(@RequestBody User user) {
-       
        if(user.getFirstName()!=null && user.getLastName()!=null && user.getDni() != null ){
           user.setStatus(User.Status.ACTIVO);
            return userService.saveUser(user);
@@ -125,6 +125,5 @@ public class UserController {
          }
         return new ResponseEntity(204,HttpStatus.NO_CONTENT);
     }
-    
 }
 
