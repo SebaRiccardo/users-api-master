@@ -58,7 +58,7 @@ public class UserController {
         return user;
     }
 
-    
+
     @GetMapping(value = "/users/search")
     @ResponseBody
     public Object searchUser(@RequestParam("dni") Long dni) {
@@ -68,6 +68,7 @@ public class UserController {
         }
         return user;
     }
+
 
     @PostMapping(value = "/users")
     @ResponseStatus(HttpStatus.CREATED)
@@ -80,6 +81,7 @@ public class UserController {
            return new ResponseEntity(new ResponseError(400, String.format("Holder data is missing ")), HttpStatus.BAD_REQUEST);    
         }   
     }
+
 
     @PutMapping(value = "/users/{userId}")
     @ResponseBody
@@ -109,6 +111,7 @@ public class UserController {
         return userService.saveUser(currentUser);
     }
 
+    
     @DeleteMapping(value = "/users/{userId}")
     @ResponseBody
     public Object deleteUser(@PathVariable("userId") Long id) throws Exception {
