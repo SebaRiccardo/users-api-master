@@ -26,7 +26,7 @@ import unsl.utils.RestService;
 
 @RestController
 public class UserController {
-    private static String ipCuentas="localhost";
+    private static String ipCuentas="3.83.42.47";
     private static String port =":8889";
     @Autowired
     UserService userService;
