@@ -16,13 +16,12 @@ import java.util.concurrent.TimeUnit;
 public class CacheConfig {
 
     public static final String user_CACHE = "users";
-    @Value("${cache.users.maximum.size:2}")
-    private int usersMaxSize;
+    //@Value("${cache.users.maximum.size:2}")
+    //private int usersMaxSize;
 
     @Bean
     public CacheManager cacheManager() {
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
-       
        
         simpleCacheManager.setCaches(Arrays.asList(buildUsersCache()));
        
@@ -33,8 +32,8 @@ public class CacheConfig {
     private GuavaCache buildUsersCache() {
         return new GuavaCache(user_CACHE, CacheBuilder
                 .newBuilder()
-                
-                .maximumSize(usersMaxSize)
+                .expireAfterAccess(23,TimeUnit.HOURS)
+                .expireAfterWrite(167, TimeUnit.HOURS)
                 .build(),
                 true);
     }

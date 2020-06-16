@@ -5,6 +5,13 @@
             "name": "CodeLens (Launch) - Application",
             "request": "launch",
             "mainClass": "unsl.Application",
+            "projectName": "user-api-master"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Application",
+            "request": "launch",
+            "mainClass": "unsl.Application",
             "projectName": "gs-accessing-data-rest"
         }
     ]
